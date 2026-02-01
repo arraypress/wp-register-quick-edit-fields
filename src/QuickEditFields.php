@@ -6,7 +6,7 @@
  * post list tables. Provides a simple API for common field types with
  * automatic saving, sanitization, and JavaScript population.
  *
- * @package     ArrayPress\WP\RegisterQuickEdit
+ * @package     ArrayPress\RegisterQuickEditFields
  * @copyright   Copyright (c) 2025, ArrayPress Limited
  * @license     GPL2+
  * @version     1.0.0
@@ -602,47 +602,79 @@ class QuickEditFields {
         }
         ?>
         <script>
-            jQuery(document).ready(function ($) {
-                var fields = <?php echo wp_json_encode( $js_fields ); ?>;
+            (function ($) {
+                'use strict';
 
-                $('#the-list').on('click', '.editinline', function () {
-                    var $row = $(this).closest('tr');
-                    // var postId = $row.attr('id').replace('post-', '');
+                const fields = <?php echo wp_json_encode( $js_fields ); ?>;
 
-                    setTimeout(function () {
-                        var $editRow = $('.inline-edit-row');
+                /**
+                 * Get field value from a table row column.
+                 *
+                 * @param {jQuery} $column The column element.
+                 * @param {string} key     The field key.
+                 * @returns {*} The field value or empty string.
+                 */
+                function getFieldValue($column, key) {
+                    // Try data attribute on element with data-{key}
+                    let $element = $column.find('[data-' + key + ']');
+                    if ($element.length) {
+                        return $element.data(key);
+                    }
 
-                        fields.forEach(function (field) {
-                            var $column = $row.find('.column-' + field.column);
-                            var value = $column.find('[data-' + field.key + ']').data(field.key);
+                    // Try data attribute directly on column
+                    let value = $column.data(key);
+                    if (value !== undefined) {
+                        return value;
+                    }
 
-                            // Fallback: try data attribute directly on column
-                            if (value === undefined) {
-                                value = $column.data(field.key);
-                            }
+                    // Try span with data attribute
+                    $element = $column.find('span[data-' + key + ']');
+                    if ($element.length) {
+                        return $element.data(key);
+                    }
 
-                            // Fallback: try span with data attribute
-                            if (value === undefined) {
-                                value = $column.find('span[data-' + field.key + ']').data(field.key);
-                            }
+                    return '';
+                }
 
-                            if (value === undefined) {
-                                value = '';
-                            }
+                /**
+                 * Populate a quick edit field with a value.
+                 *
+                 * @param {jQuery} $editRow The edit row element.
+                 * @param {Object} field    The field configuration.
+                 * @param {*}      value    The value to set.
+                 */
+                function populateField($editRow, field, value) {
+                    const $field = $editRow.find('[data-quick-edit-field="' + field.key + '"]');
 
-                            var $field = $editRow.find('[data-quick-edit-field="' + field.key + '"]');
+                    if (!$field.length) {
+                        return;
+                    }
 
-                            if ($field.length) {
-                                if (field.type === 'checkbox') {
-                                    $field.prop('checked', value === 1 || value === true || value === '1');
-                                } else {
-                                    $field.val(value);
-                                }
-                            }
-                        });
-                    }, 50);
+                    if (field.type === 'checkbox') {
+                        $field.prop('checked', value === 1 || value === true || value === '1');
+                    } else {
+                        $field.val(value);
+                    }
+                }
+
+                // Initialize quick edit field population
+                $(document).ready(function () {
+                    $('#the-list').on('click', '.editinline', function () {
+                        const $row = $(this).closest('tr');
+
+                        // Use setTimeout to wait for WordPress to create the edit row
+                        setTimeout(function () {
+                            const $editRow = $('.inline-edit-row');
+
+                            fields.forEach(function (field) {
+                                const $column = $row.find('.column-' + field.column);
+                                const value = getFieldValue($column, field.key);
+                                populateField($editRow, field, value);
+                            });
+                        }, 50);
+                    });
                 });
-            });
+            })(jQuery);
         </script>
         <?php
     }

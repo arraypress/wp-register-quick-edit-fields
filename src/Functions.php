@@ -4,7 +4,7 @@
  *
  * Global helper functions for registering quick edit fields.
  *
- * @package     ArrayPress\WP\RegisterQuickEdit
+ * @package     ArrayPress\RegisterQuickEditFields
  * @copyright   Copyright (c) 2025, ArrayPress Limited
  * @license     GPL2+
  * @version     1.0.0
