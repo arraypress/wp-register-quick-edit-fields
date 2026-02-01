@@ -607,7 +607,7 @@ class QuickEditFields {
 
                 $('#the-list').on('click', '.editinline', function () {
                     var $row = $(this).closest('tr');
-                    var postId = $row.attr('id').replace('post-', '');
+                    // var postId = $row.attr('id').replace('post-', '');
 
                     setTimeout(function () {
                         var $editRow = $('.inline-edit-row');
