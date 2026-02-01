@@ -1,4 +1,4 @@
-# WP Register Quick Edit
+# WP Register Quick Edit Fields
 
 A lightweight library for registering custom quick edit fields on WordPress post list tables.
 
@@ -18,7 +18,7 @@ A lightweight library for registering custom quick edit fields on WordPress post
 Install via Composer:
 
 ```bash
-composer require arraypress/wp-register-quick-edit
+composer require arraypress/wp-register-quick-edit-fields
 ```
 
 ## Usage

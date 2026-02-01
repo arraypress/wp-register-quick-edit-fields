@@ -13,7 +13,7 @@
 
 declare( strict_types=1 );
 
-use ArrayPress\RegisterQuickEdit\QuickEdit;
+use ArrayPress\RegisterQuickEditFields\QuickEditFields;
 
 if ( ! function_exists( 'register_quick_edit_fields' ) ):
 	/**
@@ -23,12 +23,13 @@ if ( ! function_exists( 'register_quick_edit_fields' ) ):
 	 * @param array        $fields     Array of field configurations.
 	 *
 	 * @return void
+	 * @throws Exception
 	 */
 	function register_quick_edit_fields( $post_types, array $fields ): void {
 		$post_types = (array) $post_types;
 
 		foreach ( $post_types as $post_type ) {
-			new QuickEdit( $fields, $post_type );
+			new QuickEditFields( $fields, $post_type );
 		}
 	}
 endif;

@@ -15,7 +15,7 @@
 
 declare( strict_types=1 );
 
-namespace ArrayPress\RegisterQuickEdit;
+namespace ArrayPress\RegisterQuickEditFields;
 
 use Exception;
 
@@ -26,7 +26,7 @@ use Exception;
  *
  * @package ArrayPress\RegisterQuickEdit
  */
-class QuickEdit {
+class QuickEditFields {
 
     /**
      * The post type this instance is registered for.
@@ -634,7 +634,7 @@ class QuickEdit {
 
                             if ($field.length) {
                                 if (field.type === 'checkbox') {
-                                    $field.prop('checked', value == 1 || value === true || value === '1');
+                                    $field.prop('checked', value === 1 || value === true || value === '1');
                                 } else {
                                     $field.val(value);
                                 }
